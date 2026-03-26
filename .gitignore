@@ -1,0 +1,35 @@
+# Sensitive credentials
+.env
+cookies.json
+X_cookies.json
+session.json
+session.db
+session.tw_session
+auth_token.txt
+
+# Local state and tracking
+storage.json
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Temporary files
+media_temp/
+*.log
+
+# Scripts and tools
+test_connection.py
+.agent/
+
+# OS and IDE files
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
