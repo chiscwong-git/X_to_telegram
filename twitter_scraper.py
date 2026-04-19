@@ -87,17 +87,29 @@ async def get_new_tweets(screen_name: str, last_tweet_id: str | None) -> list:
         return []
 
     new_tweets = []
-    for tweet in tweets:
+    
+    # Flatten tweets (unroll SelfThread if needed)
+    flat_tweets = []
+    for item in tweets:
+        if type(item).__name__ == "SelfThread":
+            flat_tweets.extend(getattr(item, "tweets", []))
+        else:
+            flat_tweets.append(item)
+
+    for tweet in flat_tweets:
         if getattr(tweet, "is_retweet", False):
             continue
 
-        tweet_id = str(tweet.id)
+        tweet_id = str(getattr(tweet, "id", ""))
+        if not tweet_id:
+            continue
+            
         if last_tweet_id and int(tweet_id) <= int(last_tweet_id):
             continue
 
         new_tweets.append(tweet)
 
-    new_tweets.sort(key=lambda t: int(str(t.id)))
+    new_tweets.sort(key=lambda t: int(str(getattr(t, "id", "0"))))
 
     if new_tweets:
         logger.info("Found %d new tweet(s) from @%s", len(new_tweets), screen_name)
