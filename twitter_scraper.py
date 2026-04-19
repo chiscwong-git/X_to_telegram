@@ -42,7 +42,7 @@ async def init_client() -> TwitterAsync:
 
     app = TwitterAsync("session")
 
-    session_file = "session.json"
+    session_file = "session.tw_session"
     if os.path.exists(session_file):
         logger.info("Session file found, connecting with saved session...")
         try:
