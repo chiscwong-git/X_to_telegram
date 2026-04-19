@@ -1,0 +1,57 @@
+name: X/Twitter Monitor Bot
+
+on:
+  schedule:
+    # Run every 20 minutes
+    - cron: "*/20 * * * *"
+  workflow_dispatch:
+    # Allows manual trigger
+
+permissions:
+  contents: write # Needed to commit storage.json back
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          # Important: we don't install playwright browsers here 
+          # because we only run the X (Twitter) scraper which uses twikit.
+          # If Facebook scraper was needed, we'd add `playwright install chromium`.
+
+      - name: Create Secrets & Config
+        env:
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+          X_COOKIES: ${{ secrets.X_COOKIES_JSON }}
+        run: |
+          # Write .env variables from GitHub Secret
+          echo "$ENV_FILE" > .env
+          
+          # Write X_cookies.json from GitHub Secret
+          echo "$X_COOKIES" > X_cookies.json
+
+      - name: Run Scraper
+        env:
+          RUN_ONCE: "1"
+        run: |
+          python main.py
+
+      - name: Commit storage.json
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto-update storage.json state"
+          file_pattern: "storage.json session.tw_session"
+          disable_globbing: true
