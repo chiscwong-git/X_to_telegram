@@ -27,6 +27,8 @@ media_temp/
 
 # Scripts and tools
 test_connection.py
+setup_fb.py
+debug_*.py
 .agent/
 
 # OS and IDE files
