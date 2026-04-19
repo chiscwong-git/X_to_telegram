@@ -88,7 +88,7 @@ async def get_new_tweets(screen_name: str, last_tweet_id: str | None) -> list:
 
     new_tweets = []
     for tweet in tweets:
-        if tweet.is_retweet:
+        if getattr(tweet, "is_retweet", False):
             continue
 
         tweet_id = str(tweet.id)
