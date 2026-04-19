@@ -194,7 +194,7 @@ async def main() -> None:
 
     try:
         logger.info("=" * 55)
-        logger.info("  X + Facebook → Telegram Monitor Bot")
+        logger.info("  X + Facebook -> Telegram Monitor Bot")
         logger.info("=" * 55)
 
         if not validate_config():
